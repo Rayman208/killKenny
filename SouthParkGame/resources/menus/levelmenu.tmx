@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="left-up" width="1" height="1" tilewidth="1600" tileheight="900" infinite="0" nextobjectid="8">
+ <tileset firstgid="1" name="levelmenu" tilewidth="1600" tileheight="900" tilecount="1" columns="1">
+  <image source="levelmenu.png" width="1600" height="900"/>
+ </tileset>
+ <layer name="Слой тайлов 1" width="1" height="1">
+  <data encoding="csv">
+1
+</data>
+ </layer>
+ <objectgroup name="Слой объектов 1">
+  <object id="1" name="level1" x="95" y="294" width="214" height="213"/>
+  <object id="2" name="level2" x="499" y="295" width="212" height="212"/>
+  <object id="4" name="level3" x="946" y="295" width="212" height="212"/>
+  <object id="6" name="level4" x="1349" y="295" width="212" height="212"/>
+  <object id="7" name="to_main_menu" x="1172" y="48" width="374" height="90"/>
+ </objectgroup>
+</map>
