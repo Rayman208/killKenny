@@ -6,6 +6,9 @@
 #define M_T_P 320
 #define TILE_SIZE 32
 
+#define ARROW_SIZE_W 32
+#define ARROW_SIZE_H 8
+
 #define SCREEN_WIDTH 1600
 #define SCREEN_HEIGHT 900
 
@@ -14,12 +17,12 @@
 #define RIGHT_BORDER "right_border"
 #define LEFT_BORDER "left_border"
 
-
 #define DYNAMIC_OBJECT "dynamic"
 #define STATIC_OBJECT "static"
 
 #define HERO_NAME "hero"
 #define ENEMY_NAME "enemy"
+#define ARROW_NAME "arrow"
 
 #define START_GAME "start_game"
 #define EXIT_GAME "exit_game"

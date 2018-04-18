@@ -7,7 +7,6 @@ struct RectangleData
 {
 	string name;
 	RectangleShape *rectangle;
-	
 };
 
 class PixelWorld

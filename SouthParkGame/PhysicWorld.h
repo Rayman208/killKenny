@@ -8,6 +8,7 @@ class BodyData
 public:
 	string name;
 	Sprite *sprite;
+	bool isAlive;
 };
 
 class HeroData : public BodyData
@@ -16,6 +17,14 @@ public:
 	int countArrows;
 	int lifes;
 };
+
+class ArrowData : public BodyData
+{
+public:
+	bool use;
+	int damage;
+};
+
 
 class PhysicWorld
 {
@@ -35,5 +44,7 @@ public:
 	
 	b2Body* Getb2BodyByName(string name);
 	b2World* Getb2World();
+
+	void CreateHeroArrow(float xHero, float yHero, float xMouse, float yMouse);
 };
 

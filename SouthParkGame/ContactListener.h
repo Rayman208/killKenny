@@ -23,10 +23,11 @@ public:
 		cout << "nameA: " << nameA << endl;
 		cout << "nameB: " << nameB << endl;
 
-		if (nameA == HERO_NAME && nameB == DOWN_BORDER)
+		if (nameA == HERO_NAME && nameB == ARROW_NAME)
 		{
-			/*b2Body *hero = fixtureA->GetBody();
-			hero->SetTransform(b2Vec2(hero->GetPosition().x, 0.1), hero->GetAngle());*/
+			((BodyData*)fixtureB->GetBody()->GetUserData())->isAlive = false;
+
+			((HeroData*)fixtureA->GetBody()->GetUserData())->countArrows++;
 		}
 	}
 	virtual void EndContact(b2Contact* contact) {}

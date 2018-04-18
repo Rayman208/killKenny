@@ -34,6 +34,11 @@ void Game::ShowWorld(int idWorld)
 	float viewW = SCREEN_WIDTH*wScale;
 	float viewH = SCREEN_HEIGHT*hScale;
 
+	float xHero = viewW / 2;
+	float yHero = viewH / 2;
+
+	float b2Step = 1.0f / 60.0f;
+
 	View view(Vector2f(hero->GetPosition().x*M_T_P, hero->GetPosition().y*M_T_P), Vector2f(viewW, viewH));
 
 	Clock clk;
@@ -46,6 +51,9 @@ void Game::ShowWorld(int idWorld)
 	gameInfo.setPosition(0, 0);
 
 	bool pressJump = false;
+	bool pressFire = false;
+	((HeroData*)hero->GetUserData())->countArrows = 15;
+	bool firstShoot = true;
 
 	RectangleShape rs;
 	rs.setFillColor(Color::Transparent);
@@ -96,7 +104,32 @@ void Game::ShowWorld(int idWorld)
 			//view.move(0, 1);
 		}
 
-		b2world->Step(1.0f / 60.0f, 8, 3);
+
+		if (Mouse::isButtonPressed(Mouse::Button::Left) == false)
+		{
+			pressFire = false;
+		}
+		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && pressFire == false && ((HeroData*)hero->GetUserData())->countArrows>0)
+		{
+			if(firstShoot==false)
+			phWorld.CreateHeroArrow(xHero,yHero,
+					Mouse::getPosition().x, Mouse::getPosition().y);
+			
+			pressFire = true;
+			firstShoot = false;
+			((HeroData*)hero->GetUserData())->countArrows--;
+		}
+
+		b2world->Step(b2Step, 8, 3);
+
+		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
+		{
+			if (((BodyData*)body->GetUserData())->isAlive == false)
+			{
+				b2world->DestroyBody(body);
+				break;
+			}
+		}
 
 		view.setCenter(hero->GetPosition().x*M_T_P, hero->GetPosition().y*M_T_P);
 
@@ -108,7 +141,10 @@ void Game::ShowWorld(int idWorld)
 		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
 		{
 			Sprite *sprite = ((BodyData*)body->GetUserData())->sprite;
+
 			sprite->setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
+			sprite->setRotation(-body->GetAngle()*180.0/3.14);
+
 			m_window->draw(*sprite);
 
 			/*int w = (body->GetFixtureList()->GetAABB(0).GetExtents().x*2)*M_T_P;
@@ -118,14 +154,21 @@ void Game::ShowWorld(int idWorld)
 			rs.setOrigin(w / 2, h / 2);
 			rs.setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
 
-			m_window->draw(rs);
-*/
+			m_window->draw(rs);*/
+
 			/*	if (((BodyData*)body->GetUserData())->name == HERO_NAME)
 			{
 			int lifes = ((HeroData*)body->GetUserData())->lifes;
 			window.setTitle(to_string(lifes));
 			}*/
 		}
+
+		/*rs.setSize(Vector2f(2,2));
+		rs.setOrigin(1, 1);
+		rs.setPosition(view.getCenter().x, view.getCenter().y);
+
+		m_window->draw(rs);
+*/
 
 
 		long frameTime = clk.restart().asMicroseconds();
@@ -136,7 +179,11 @@ void Game::ShowWorld(int idWorld)
 		string outString = "fps = " + to_string(fps) + "\n";
 		outString += "heroX = " + to_string(heroX) + "\n";
 		outString += "heroY = " + to_string(heroY) + "\n";
-		
+		outString += "mX = " + to_string(Mouse::getPosition().x*P_T_M) + "\n";
+		outString += "mY = " + to_string(Mouse::getPosition().y*P_T_M) + "\n";
+		outString += "viewX = " + to_string(view.getCenter().x) + "\n";
+		outString += "viewY = " + to_string(view.getCenter().y) + "\n";
+
 		gameInfo.setPosition(heroX*M_T_P + 10, heroY*M_T_P + 10);
 		gameInfo.setString(outString);
 		m_window->draw(gameInfo);
