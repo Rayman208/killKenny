@@ -25,6 +25,13 @@ public:
 	int damage;
 };
 
+class EnemyData :public BodyData
+{
+public:
+	int direction;
+	float speed;
+};
+
 
 class PhysicWorld
 {

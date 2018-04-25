@@ -35,16 +35,17 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		int height = atoi(object.attribute("height").value());
 		string type = object.attribute("type").value();
 
-		Sprite *sprite = new Sprite();
-		Texture *texture = new Texture();
-		texture->loadFromFile("resources\\textures\\"+name+".png");
-		texture->setRepeated(true);
-		sprite->setTexture(*texture);
-		sprite->setTextureRect(IntRect(0, 0, width, height));
-		
-		/*sprite->setOrigin(sprite->getLocalBounds().width / 2, sprite->getLocalBounds().height / 2);*/
-		sprite->setOrigin(width / 2, height / 2);
-
+		Sprite *sprite = NULL;
+		if (name != L_REVERCE_NAME && name != R_REVERCE_NAME)
+		{
+			sprite = new Sprite();
+			Texture *texture = new Texture();
+			texture->loadFromFile("resources\\textures\\" + name + ".png");
+			texture->setRepeated(true);
+			sprite->setTexture(*texture);
+			sprite->setTextureRect(IntRect(0, 0, width, height));
+			sprite->setOrigin(width / 2, height / 2);
+		}
 		BodyData *bodyData;
 
 		if (name == HERO_NAME)
@@ -52,6 +53,12 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		    bodyData = new HeroData();
 			((HeroData*)bodyData)->countArrows = 10;
 			((HeroData*)bodyData)->lifes = 15;
+		}
+		else if (name == ENEMY_NAME)
+		{
+			bodyData = new EnemyData();
+			((EnemyData*)bodyData)->direction = 1;
+			((EnemyData*)bodyData)->speed = -0.01;
 		}
 		else
 		{
@@ -81,8 +88,18 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		fixtureDef.friction = 0.4f;
 		fixtureDef.restitution = 0.0;
 		fixtureDef.shape = &polygonShape;
-
+	
 		if (name == HERO_NAME) { bodyDef.fixedRotation = true; }
+		if (name == L_REVERCE_NAME)
+		{
+			fixtureDef.isSensor = true; 
+			bodyDef.position.x = bodyDef.position.x - bw * 7;
+		}
+		if (name == R_REVERCE_NAME)
+		{
+			fixtureDef.isSensor = true;
+			bodyDef.position.x = bodyDef.position.x + bw * 7;
+		}
 
 		if (type == DYNAMIC_OBJECT)
 		{
@@ -95,6 +112,17 @@ void PhysicWorld::LoadFromFile(char* fileName)
 
 		b2Body *body = m_world->CreateBody(&bodyDef);
 		body->CreateFixture(&fixtureDef);
+
+		if (name == ENEMY_NAME)
+		{
+			b2CircleShape circleShape;
+			circleShape.m_radius = bw*6;
+			b2FixtureDef fixtureDefCircle;
+			fixtureDefCircle.shape = &circleShape;
+			fixtureDefCircle.isSensor = true;
+			body->CreateFixture(&fixtureDefCircle);
+		}
+
 		body->SetUserData(bodyData);
 		body->ResetMassData();
 	}

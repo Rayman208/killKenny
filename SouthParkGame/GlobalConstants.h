@@ -23,6 +23,8 @@
 #define HERO_NAME "hero"
 #define ENEMY_NAME "enemy"
 #define ARROW_NAME "arrow"
+#define L_REVERCE_NAME "l_reverce"
+#define R_REVERCE_NAME "r_reverce"
 
 #define START_GAME "start_game"
 #define EXIT_GAME "exit_game"

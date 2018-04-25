@@ -62,6 +62,9 @@ void Game::ShowWorld(int idWorld)
 
 	while (m_window->isOpen() == true)
 	{
+		long frameTime = clk.restart().asMicroseconds();
+		double fps = 1000000.0 / frameTime;
+
 		Event evt;
 		while (m_window->pollEvent(evt) == true)
 		{
@@ -120,6 +123,18 @@ void Game::ShowWorld(int idWorld)
 			((HeroData*)hero->GetUserData())->countArrows--;
 		}
 
+		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
+		{
+			if (((BodyData*)body->GetUserData())->name == ENEMY_NAME)
+			{
+				b2Vec2 velocity = body->GetLinearVelocity();
+				
+				velocity.x = ((EnemyData*)body->GetUserData())->direction * ((EnemyData*)body->GetUserData())->speed * frameTime / 1000.0;
+
+				body->SetLinearVelocity(velocity);
+			}
+		}
+
 		b2world->Step(b2Step, 8, 3);
 
 		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
@@ -142,19 +157,42 @@ void Game::ShowWorld(int idWorld)
 		{
 			Sprite *sprite = ((BodyData*)body->GetUserData())->sprite;
 
-			sprite->setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
-			sprite->setRotation(-body->GetAngle()*180.0/3.14);
+			if (sprite != NULL)
+			{
+				sprite->setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
+				sprite->setRotation(-body->GetAngle()*180.0 / 3.14);
+				m_window->draw(*sprite);
+			}
+		//	if (((BodyData*)body->GetUserData())->name == ENEMY_NAME)
+			{
 
-			m_window->draw(*sprite);
+				int w = (body->GetFixtureList()->GetAABB(0).GetExtents().x * 2)*M_T_P;
+				int h = (body->GetFixtureList()->GetAABB(0).GetExtents().y * 2)*M_T_P;
 
-			/*int w = (body->GetFixtureList()->GetAABB(0).GetExtents().x*2)*M_T_P;
-			int h = (body->GetFixtureList()->GetAABB(0).GetExtents().y*2)*M_T_P;
+				rs.setSize(Vector2f(w, h));
+				rs.setOrigin(w / 2, h / 2);
+				rs.setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
 
-			rs.setSize(Vector2f(w, h));
-			rs.setOrigin(w / 2, h / 2);
-			rs.setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
+				m_window->draw(rs);
+			}
+			/*if (((BodyData*)body->GetUserData())->name == ENEMY_NAME)
+			{
+				CircleShape cs;
+				cs.setFillColor(Color::Transparent);
+				cs.setOutlineThickness(3.0f);
+				cs.setOutlineColor(Color::Red);
 
-			m_window->draw(rs);*/
+				b2Fixture* f = body->GetFixtureList()->GetNext();
+
+				float r = (f->GetAABB(0).GetExtents().x * 2)*M_T_P;
+
+				cs.setRadius(r);
+				cs.setOrigin(r / 2, r / 2);
+				cs.setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
+
+				m_window->draw(cs);
+			}*/
+
 
 			/*	if (((BodyData*)body->GetUserData())->name == HERO_NAME)
 			{
@@ -171,8 +209,6 @@ void Game::ShowWorld(int idWorld)
 */
 
 
-		long frameTime = clk.restart().asMicroseconds();
-		double fps =1000000.0 / frameTime;
 		float heroX = hero->GetPosition().x;
 		float heroY = hero->GetPosition().y;
 
