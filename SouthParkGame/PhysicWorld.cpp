@@ -258,3 +258,58 @@ void PhysicWorld::CreateHeroArrow(float xHero, float yHero, float xMouse, float 
 	
 	body->SetLinearVelocity(b2Vec2(0.9f*cos(alpha)*currentKoefValue, -0.9f*sin(alpha)*currentKoefValue));
 }
+
+void PhysicWorld::CreateEnemyEgg(float xHero, float yHero, float xEnemy, float yEnemy)
+{
+	b2BodyDef bodyDef;
+	b2PolygonShape polygonShape;
+	b2FixtureDef fixtureDef;
+
+	BodyData *bodyData;
+
+	Sprite *sprite = new Sprite();
+	Texture *texture = new Texture();
+	texture->loadFromFile("resources\\textures\\egg.png");
+	sprite->setTexture(*texture);
+	sprite->setOrigin(ARROW_SIZE_W / 2, ARROW_SIZE_H / 2);
+
+	bodyData = new ArrowData();
+
+	bodyData->name = ARROW_NAME;
+	bodyData->sprite = sprite;
+	bodyData->isAlive = true;
+
+	polygonShape.SetAsBox((ARROW_SIZE_W / 2.0)*P_T_M, (ARROW_SIZE_H / 2.0)*P_T_M);
+	bodyDef.type = b2BodyType::b2_dynamicBody;
+
+	b2Body *hero = Getb2BodyByName(HERO_NAME);
+
+	float maxKoefValue = sqrtf(powf(xHero, 2) + powf(yHero, 2));
+	float currentKoefValue = sqrtf(powf(yHero - yMouse, 2) + powf(xMouse - xHero, 2)) / maxKoefValue;
+
+	float alpha = atan((yHero - yMouse) / (xMouse - xHero));
+	if (xMouse - xHero < 0)
+	{
+		alpha += 3.14;
+		bodyDef.position = b2Vec2(hero->GetPosition().x - (TILE_SIZE + 4)*P_T_M, hero->GetPosition().y);
+	}
+	else
+	{
+		bodyDef.position = b2Vec2(hero->GetPosition().x + (TILE_SIZE + 4)*P_T_M, hero->GetPosition().y);
+	}
+
+	//float alpha = atan2(xMouse,yMouse);
+	bodyDef.angle = alpha;//360*3.14/180.0;
+
+	fixtureDef.density = 1;
+	fixtureDef.friction = 1.0;
+	fixtureDef.restitution = 0;
+	fixtureDef.shape = &polygonShape;
+
+	b2Body *body = m_world->CreateBody(&bodyDef);
+	body->CreateFixture(&fixtureDef);
+	body->SetUserData(bodyData);
+	body->ResetMassData();
+
+	body->SetLinearVelocity(b2Vec2(0.9f*cos(alpha)*currentKoefValue, -0.9f*sin(alpha)*currentKoefValue));
+}
