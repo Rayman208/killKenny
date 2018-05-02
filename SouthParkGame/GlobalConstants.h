@@ -9,8 +9,13 @@
 #define ARROW_SIZE_W 32
 #define ARROW_SIZE_H 8
 
+#define EGG_SIZE_W 32
+#define EGG_SIZE_H 32
+
 #define SCREEN_WIDTH 1600
 #define SCREEN_HEIGHT 900
+
+#define ENEMY_REVIEW 20
 
 #define UP_BORDER "up_border"
 #define DOWN_BORDER "down_border"
@@ -23,6 +28,7 @@
 #define HERO_NAME "hero"
 #define ENEMY_NAME "enemy"
 #define ARROW_NAME "arrow"
+#define EGG_NAME "egg"
 #define L_REVERCE_NAME "l_reverce"
 #define R_REVERCE_NAME "r_reverce"
 

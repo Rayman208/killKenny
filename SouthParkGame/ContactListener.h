@@ -5,6 +5,8 @@
 #include <iostream>
 using namespace std;
 
+extern b2Body* ShootingEnemy;
+
 class ContactListener : public b2ContactListener
 {
 public:
@@ -45,6 +47,18 @@ public:
 		{
 			((BodyData*)fixtureA->GetBody()->GetUserData())->isAlive = false;
 		}
+
+		if (nameA == ENEMY_NAME && fixtureA->IsSensor() == true && nameB == HERO_NAME)
+		{
+			ShootingEnemy = fixtureA->GetBody();
+		}
+
+		if (nameB == ENEMY_NAME && fixtureB->IsSensor() == true && nameA == HERO_NAME)
+		{
+			ShootingEnemy = fixtureB->GetBody();
+		}
+
+		
 
 	}
 	virtual void EndContact(b2Contact* contact) {}

@@ -12,7 +12,7 @@ int GetActiveRectIndex(vector<RectangleData*> *rects, Vector2i position)
 	return -1;
 }
 
-
+b2Body* ShootingEnemy = NULL;
 
 void Game::ShowWorld(int idWorld)
 {
@@ -121,6 +121,30 @@ void Game::ShowWorld(int idWorld)
 			pressFire = true;
 			firstShoot = false;
 			((HeroData*)hero->GetUserData())->countArrows--;
+		}
+
+		if (ShootingEnemy != NULL)
+		{
+			phWorld.CreateEnemyEgg(
+				hero->GetPosition().x,
+				hero->GetPosition().y, 
+				ShootingEnemy->GetPosition().x,
+				ShootingEnemy->GetPosition().y);
+
+			ShootingEnemy = NULL;
+		}
+
+		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
+		{
+			if (((BodyData*)body->GetUserData())->name == EGG_NAME)
+			{
+				((EggData*)body->GetUserData())->coolDown--;
+
+				if (((EggData*)body->GetUserData())->coolDown == 0)
+				{
+					((BodyData*)body->GetUserData())->isAlive = false;
+				}
+			}
 		}
 
 		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())

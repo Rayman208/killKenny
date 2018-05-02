@@ -25,6 +25,14 @@ public:
 	int damage;
 };
 
+class EggData : public BodyData
+{
+public:
+	int damage;
+	int coolDown;
+};
+
+
 class EnemyData :public BodyData
 {
 public:
@@ -53,5 +61,6 @@ public:
 	b2World* Getb2World();
 
 	void CreateHeroArrow(float xHero, float yHero, float xMouse, float yMouse);
+	void CreateEnemyEgg(float xHero, float yHero, float xEnemy, float yEnemy);
 };
 

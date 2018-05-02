@@ -13,6 +13,7 @@ PhysicWorld::~PhysicWorld()
 
 void PhysicWorld::LoadFromFile(char* fileName)
 {
+
 	xml_document document;
 	document.load_file(fileName);
 
@@ -93,12 +94,12 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		if (name == L_REVERCE_NAME)
 		{
 			fixtureDef.isSensor = true; 
-			bodyDef.position.x = bodyDef.position.x - bw * 7;
+			bodyDef.position.x = bodyDef.position.x - bw * (ENEMY_REVIEW+1);
 		}
 		if (name == R_REVERCE_NAME)
 		{
 			fixtureDef.isSensor = true;
-			bodyDef.position.x = bodyDef.position.x + bw * 7;
+			bodyDef.position.x = bodyDef.position.x + bw * (ENEMY_REVIEW + 1);
 		}
 
 		if (type == DYNAMIC_OBJECT)
@@ -116,7 +117,7 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		if (name == ENEMY_NAME)
 		{
 			b2CircleShape circleShape;
-			circleShape.m_radius = bw*6;
+			circleShape.m_radius = bw*ENEMY_REVIEW;
 			b2FixtureDef fixtureDefCircle;
 			fixtureDefCircle.shape = &circleShape;
 			fixtureDefCircle.isSensor = true;
@@ -271,31 +272,28 @@ void PhysicWorld::CreateEnemyEgg(float xHero, float yHero, float xEnemy, float y
 	Texture *texture = new Texture();
 	texture->loadFromFile("resources\\textures\\egg.png");
 	sprite->setTexture(*texture);
-	sprite->setOrigin(ARROW_SIZE_W / 2, ARROW_SIZE_H / 2);
+	sprite->setOrigin(EGG_SIZE_W / 2, EGG_SIZE_H / 2);
 
-	bodyData = new ArrowData();
+	bodyData = new EggData();
 
-	bodyData->name = ARROW_NAME;
+	bodyData->name = EGG_NAME;
 	bodyData->sprite = sprite;
 	bodyData->isAlive = true;
+	((EggData*)bodyData)->coolDown = 1000;
 
 	polygonShape.SetAsBox((ARROW_SIZE_W / 2.0)*P_T_M, (ARROW_SIZE_H / 2.0)*P_T_M);
 	bodyDef.type = b2BodyType::b2_dynamicBody;
 
-	b2Body *hero = Getb2BodyByName(HERO_NAME);
+	float alpha = atan((yEnemy - yHero) / (xHero - xEnemy));
 
-	float maxKoefValue = sqrtf(powf(xHero, 2) + powf(yHero, 2));
-	float currentKoefValue = sqrtf(powf(yHero - yMouse, 2) + powf(xMouse - xHero, 2)) / maxKoefValue;
-
-	float alpha = atan((yHero - yMouse) / (xMouse - xHero));
-	if (xMouse - xHero < 0)
+	if (xHero - xEnemy < 0)
 	{
 		alpha += 3.14;
-		bodyDef.position = b2Vec2(hero->GetPosition().x - (TILE_SIZE + 4)*P_T_M, hero->GetPosition().y);
+		bodyDef.position = b2Vec2(xEnemy - (TILE_SIZE + 4)*P_T_M, yEnemy);
 	}
 	else
 	{
-		bodyDef.position = b2Vec2(hero->GetPosition().x + (TILE_SIZE + 4)*P_T_M, hero->GetPosition().y);
+		bodyDef.position = b2Vec2(xEnemy + (TILE_SIZE + 4)*P_T_M, yEnemy);
 	}
 
 	//float alpha = atan2(xMouse,yMouse);
@@ -311,5 +309,5 @@ void PhysicWorld::CreateEnemyEgg(float xHero, float yHero, float xEnemy, float y
 	body->SetUserData(bodyData);
 	body->ResetMassData();
 
-	body->SetLinearVelocity(b2Vec2(0.9f*cos(alpha)*currentKoefValue, -0.9f*sin(alpha)*currentKoefValue));
+	body->SetLinearVelocity(b2Vec2(0.9f*cos(alpha),-0.9f*sin(alpha)));
 }
