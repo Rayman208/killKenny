@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="left-up" width="100" height="56" tilewidth="32" tileheight="32" infinite="0" nextobjectid="23">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="left-up" width="100" height="56" tilewidth="32" tileheight="32" infinite="0" nextobjectid="27">
  <layer name="tiles_layer" width="100" height="56">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -78,5 +78,9 @@
   <object id="20" name="key" type="dynamic" x="1408" y="1056" width="32" height="32"/>
   <object id="21" name="enemy" type="dynamic" x="2208" y="512" width="32" height="32"/>
   <object id="22" name="r_reverce" type="static" x="2432" y="512" width="32" height="32"/>
+  <object id="23" name="l_reverce" type="static" x="1344" y="192" width="32" height="32"/>
+  <object id="24" name="l_reverce" type="static" x="320" y="320" width="32" height="32"/>
+  <object id="25" name="r_reverce" type="static" x="1792" y="192" width="32" height="32"/>
+  <object id="26" name="r_reverce" type="static" x="704" y="320" width="32" height="32"/>
  </objectgroup>
 </map>
