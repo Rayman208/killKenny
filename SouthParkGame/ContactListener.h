@@ -6,6 +6,8 @@
 using namespace std;
 
 extern b2Body* ShootingEnemy;
+extern bool KeyIsTaken;
+extern bool GoToNextLevel;
 
 class ContactListener : public b2ContactListener
 {
@@ -17,7 +19,6 @@ public:
 	{
 		b2Fixture *fixtureA = contact->GetFixtureA();
 		b2Fixture *fixtureB = contact->GetFixtureB();
-
 
 		string nameA = ((BodyData*)fixtureA->GetBody()->GetUserData())->name;
 
@@ -58,7 +59,22 @@ public:
 			ShootingEnemy = fixtureB->GetBody();
 		}
 
+
+		if (nameA == HERO_NAME && nameB == KEY_NAME)
+		{
+			((BodyData*)fixtureB->GetBody()->GetUserData())->isAlive = false;
+			KeyIsTaken = true;
+		}
+		if (nameB == HERO_NAME && nameA == KEY_NAME)
+		{
+			((BodyData*)fixtureA->GetBody()->GetUserData())->isAlive = false;
+			KeyIsTaken = true;
+		}
 		
+		if (nameA == HERO_NAME && nameB == PORTAL_NAME && KeyIsTaken==true)
+		{
+			GoToNextLevel = true;
+		}
 
 	}
 	virtual void EndContact(b2Contact* contact) {}

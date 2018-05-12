@@ -13,9 +13,15 @@ int GetActiveRectIndex(vector<RectangleData*> *rects, Vector2i position)
 }
 
 b2Body* ShootingEnemy = NULL;
+bool KeyIsTaken = false;
+bool GoToNextLevel = false;
 
-void Game::ShowWorld(int idWorld)
+int Game::ShowWorld(int idWorld)
 {
+	ShootingEnemy = NULL;
+	KeyIsTaken = false;
+	GoToNextLevel = false;
+
 	PhysicWorld phWorld;
 
 	string worldName = "resources\\levels\\level"+to_string(idWorld) + ".tmx";
@@ -62,6 +68,11 @@ void Game::ShowWorld(int idWorld)
 
 	while (m_window->isOpen() == true)
 	{
+		if (GoToNextLevel == true)
+		{
+			return idWorld + 1;
+		}
+
 		long frameTime = clk.restart().asMicroseconds();
 		double fps = 1000000.0 / frameTime;
 
@@ -250,6 +261,7 @@ void Game::ShowWorld(int idWorld)
 
 		m_window->display();
 	}
+	return 0;
 }
 
 void Game::ShowMainMenu()
@@ -299,6 +311,75 @@ void Game::ShowMainMenu()
 
 			m_window->draw(*(rects->at(i))->rectangle);
 		}
+		m_window->display();
+	}
+}
+
+void Game::ShowFinal()
+{
+	VideoMode mode = VideoMode::getDesktopMode();
+	float wScale = ((float)mode.width) / SCREEN_WIDTH;
+	float hScale = ((float)mode.height) / SCREEN_HEIGHT;
+
+	float viewW = SCREEN_WIDTH*wScale;
+	float viewH = SCREEN_HEIGHT*hScale;
+
+	View view(Vector2f(viewW/2,viewH/2), Vector2f(viewW, viewH));
+	m_window->setView(view);
+
+	PixelWorld pxWorld;
+	pxWorld.LoadFromFile("resources\\menus\\final.tmx");
+
+	Sprite *backgroud = pxWorld.GetBackground();
+	vector<RectangleData*> *rects = pxWorld.GetPixelWorld();
+
+	RectangleShape rs;
+	rs.setPosition(Vector2f(10, 10));
+	rs.setSize(Vector2f(50, 50));
+	rs.setFillColor(Color::Red);
+
+	while (m_window->isOpen() == true)
+	{
+		Event evt;
+		while (m_window->pollEvent(evt) == true)
+		{
+		}
+
+		int findIndex = GetActiveRectIndex(rects, Mouse::getPosition());
+
+		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && findIndex != -1)
+		{
+			if (rects->at(findIndex)->name == TO_MAIN_MENU)
+			{
+				m_currentState = States::showMainMenu;
+				return;
+			}
+			else if (rects->at(findIndex)->name == EXIT_GAME)
+			{
+				m_currentState = States::exit;
+				return;
+			}
+		}
+
+
+		m_window->clear(Color::White);
+		m_window->draw(*backgroud);
+		for (int i = 0; i < rects->size(); i++)
+		{
+			if (i == findIndex)
+			{
+				rects->at(i)->rectangle->setOutlineColor(Color::Green);
+			}
+			else
+			{
+				rects->at(i)->rectangle->setOutlineColor(Color::Yellow);
+			}
+
+			m_window->draw(*(rects->at(i))->rectangle);
+		}
+		
+		m_window->draw(rs);
+
 		m_window->display();
 	}
 }
@@ -398,9 +479,16 @@ void Game::PlayGame()
 			idWorld = ShowLevelMenu();
 			break;
 		case States::showWorld:
-			ShowWorld(idWorld);
+			idWorld = ShowWorld(idWorld);
+			if (idWorld > COUNT_LEVELS)
+			{
+				m_currentState = States::showFinal;
+			}
 			break;
 		case States::showShop:
+			break;
+		case States::showFinal:
+			ShowFinal();
 			break;
 		}
 	}

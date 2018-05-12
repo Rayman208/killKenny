@@ -7,13 +7,14 @@
 class Game
 {
 private:
-	enum States {start, showMainMenu, showLevelMenu, showWorld, showShop, exit};
+	enum States {start, showMainMenu, showLevelMenu, showWorld, showShop, showFinal, exit};
 
 	RenderWindow *m_window;
 	States m_currentState;
 private:
-	void ShowWorld(int idWorld);
+	int ShowWorld(int idWorld);
 	void ShowMainMenu();
+	void ShowFinal();
 	int ShowLevelMenu();
 public:
 	Game();

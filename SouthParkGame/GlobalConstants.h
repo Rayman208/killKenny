@@ -29,6 +29,8 @@
 #define ENEMY_NAME "enemy"
 #define ARROW_NAME "arrow"
 #define EGG_NAME "egg"
+#define KEY_NAME "key"
+#define PORTAL_NAME "portal"
 #define L_REVERCE_NAME "l_reverce"
 #define R_REVERCE_NAME "r_reverce"
 
@@ -41,4 +43,4 @@
 #define LEVEL2 "level2"
 #define LEVEL3 "level3"
 #define LEVEL4 "level4"
-
+#define COUNT_LEVELS 2

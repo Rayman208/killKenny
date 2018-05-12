@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="left-up" width="1" height="1" tilewidth="1600" tileheight="900" infinite="0" nextobjectid="5">
+ <tileset firstgid="1" name="mainmenu" tilewidth="1600" tileheight="900" tilecount="1" columns="1">
+  <image source="mainmenu.png" width="1600" height="900"/>
+ </tileset>
+ <layer name="Слой тайлов 1" width="1" height="1">
+  <data encoding="csv">
+1
+</data>
+ </layer>
+ <objectgroup name="Слой объектов 1">
+  <object id="1" name="to_main_menu" x="324" y="55" width="414" height="156"/>
+  <object id="3" name="exit_game" x="883" y="54.8571" width="414" height="156"/>
+ </objectgroup>
+</map>
