@@ -6,7 +6,7 @@
 class BodyData
 {
 public:
-	string name;
+	int id;
 	Sprite *sprite;
 	bool isAlive;
 };
@@ -58,7 +58,7 @@ public:
 	int GetWidthInpx();
 	int GetHeightInpx();
 	
-	b2Body* Getb2BodyByName(string name);
+	b2Body* Getb2BodyById(int id);
 	b2World* Getb2World();
 
 	void CreateHeroArrow(float xHero, float yHero, float xMouse, float yMouse);

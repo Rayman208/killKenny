@@ -9,10 +9,10 @@
 </data>
  </layer>
  <objectgroup name="Слой объектов 1">
-  <object id="1" name="level1" x="95" y="294" width="214" height="213"/>
-  <object id="2" name="level2" x="499" y="295" width="212" height="212"/>
-  <object id="4" name="level3" x="946" y="295" width="212" height="212"/>
-  <object id="6" name="level4" x="1349" y="295" width="212" height="212"/>
-  <object id="7" name="to_main_menu" x="1172" y="48" width="374" height="90"/>
+  <object id="1" name="204" x="95" y="294" width="214" height="213"/>
+  <object id="2" name="205" x="499" y="295" width="212" height="212"/>
+  <object id="4" name="206" x="946" y="295" width="212" height="212"/>
+  <object id="6" name="207" x="1349" y="295" width="212" height="212"/>
+  <object id="7" name="203" x="1172" y="48" width="374" height="90"/>
  </objectgroup>
 </map>

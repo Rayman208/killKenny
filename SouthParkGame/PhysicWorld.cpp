@@ -3,6 +3,7 @@
 
 PhysicWorld::PhysicWorld()
 {
+	m_world = new b2World(b2Vec2(0, 0.1f));
 }
 
 
@@ -13,7 +14,6 @@ PhysicWorld::~PhysicWorld()
 
 void PhysicWorld::LoadFromFile(char* fileName)
 {
-
 	xml_document document;
 	document.load_file(fileName);
 
@@ -23,13 +23,13 @@ void PhysicWorld::LoadFromFile(char* fileName)
 	m_heightInpx = atoi(document.child("map").attribute("height").value())*TILE_SIZE;
 
 	//загрузка объектов
-	m_world = new b2World(b2Vec2(0, 0.1f));
 	
 	xml_object_range<xml_node_iterator> objects = document.child("map").child("objectgroup").children();
 	
 	for (xml_node object:objects)
 	{
-		string name = object.attribute("name").value();
+		//string name = object.attribute("name").value();
+		int id = atoi(object.attribute("name").value());
 		int x = atoi(object.attribute("x").value());
 		int y = atoi(object.attribute("y").value());
 		int width = atoi(object.attribute("width").value());
@@ -37,11 +37,11 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		string type = object.attribute("type").value();
 
 		Sprite *sprite = NULL;
-		if (name != L_REVERCE_NAME && name != R_REVERCE_NAME)
+		if (id != OBJ_ID_L_REVERCE && id != OBJ_ID_R_REVERCE)
 		{
 			sprite = new Sprite();
 			Texture *texture = new Texture();
-			texture->loadFromFile("resources\\textures\\" + name + ".png");
+			texture->loadFromFile("resources\\textures\\" + to_string(id) + ".png");
 			texture->setRepeated(true);
 			sprite->setTexture(*texture);
 			sprite->setTextureRect(IntRect(0, 0, width, height));
@@ -49,24 +49,25 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		}
 		BodyData *bodyData;
 
-		if (name == OBJ_ID_HERO)
+		if (id == OBJ_ID_HERO)
 		{
 		    bodyData = new HeroData();
 			((HeroData*)bodyData)->countArrows = 10;
 			((HeroData*)bodyData)->lifes = 15;
 		}
-		else if (name == ENEMY_NAME)
+		else if (id == OBJ_ID_ENEMY)
 		{
 			bodyData = new EnemyData();
 			((EnemyData*)bodyData)->direction = 1;
 			((EnemyData*)bodyData)->speed = -0.01;
+			((EnemyData*)bodyData)->review = 20;
 		}
 		else
 		{
 			bodyData = new BodyData();
 		}
 		bodyData->sprite = sprite;
-		bodyData->name = name;
+		bodyData->id = id;
 		bodyData->isAlive = true;
 		
 		b2BodyDef bodyDef;
@@ -90,16 +91,16 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		fixtureDef.restitution = 0.0;
 		fixtureDef.shape = &polygonShape;
 	
-		if (name == OBJ_ID_HERO) { bodyDef.fixedRotation = true; }
-		if (name == L_REVERCE_NAME)
+		if (id == OBJ_ID_HERO) { bodyDef.fixedRotation = true; }
+		if (id == OBJ_ID_L_REVERCE)
 		{
 			fixtureDef.isSensor = true; 
-			bodyDef.position.x = bodyDef.position.x - bw * (ENEMY_REVIEW+1);
+			//bodyDef.position.x = bodyDef.position.x - bw * ((EnemyData*)bodyData)->review;
 		}
-		if (name == R_REVERCE_NAME)
+		if (id == OBJ_ID_R_REVERCE)
 		{
 			fixtureDef.isSensor = true;
-			bodyDef.position.x = bodyDef.position.x + bw * (ENEMY_REVIEW + 1);
+			//bodyDef.position.x = bodyDef.position.x + bw * ((EnemyData*)bodyData)->review;
 		}
 
 		if (type == PROP_DYNAMIC)
@@ -114,10 +115,10 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		b2Body *body = m_world->CreateBody(&bodyDef);
 		body->CreateFixture(&fixtureDef);
 
-		if (name == ENEMY_NAME)
+		if (id == OBJ_ID_ENEMY)
 		{
 			b2CircleShape circleShape;
-			circleShape.m_radius = bw*ENEMY_REVIEW;
+			circleShape.m_radius = bw*((EnemyData*)bodyData)->review;
 			b2FixtureDef fixtureDefCircle;
 			fixtureDefCircle.shape = &circleShape;
 			fixtureDefCircle.isSensor = true;
@@ -145,22 +146,22 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		case 1://верхн€€ граница
 			bodyDef.position = b2Vec2((m_widthInpx / 2.0)*P_T_M, 0);
 			polygonShape.SetAsBox((m_widthInpx / 2.0)*P_T_M, 2 * P_T_M);
-			bodyData->name = OBJ_ID_UP_BORDER;
+			bodyData->id = OBJ_ID_UP_BORDER;
 			break;
 		case 2://нижн€€ граница
 			bodyDef.position = b2Vec2((m_widthInpx / 2.0)*P_T_M, m_heightInpx*P_T_M);
 			polygonShape.SetAsBox((m_widthInpx / 2.0)*P_T_M, 2 * P_T_M);
-			bodyData->name = OBJ_ID_DOWN_BORDER;
+			bodyData->id = OBJ_ID_DOWN_BORDER;
 			break;
 		case 3://лева€ граница
 			bodyDef.position = b2Vec2(0, (m_heightInpx/2.0)*P_T_M);
 			polygonShape.SetAsBox(2*P_T_M, (m_heightInpx / 2.0) * P_T_M);
-			bodyData->name = OBJ_ID_LEFT_BORDER;
+			bodyData->id = OBJ_ID_LEFT_BORDER;
 			break;
 		case 4://права€ граница
 			bodyDef.position = b2Vec2(m_widthInpx*P_T_M, (m_heightInpx / 2.0)*P_T_M);
 			polygonShape.SetAsBox(2 * P_T_M, (m_heightInpx / 2.0) * P_T_M);
-			bodyData->name = OBJ_ID_RIGHT_BORDER;
+			bodyData->id = OBJ_ID_RIGHT_BORDER;
 			break;
 		}
 		bodyData->isAlive = true;
@@ -177,11 +178,11 @@ void PhysicWorld::LoadFromFile(char* fileName)
 	}
 }
 
-b2Body* PhysicWorld::Getb2BodyByName(string name)
+b2Body* PhysicWorld::Getb2BodyById(int id)
 {
 	for (b2Body *body = m_world->GetBodyList(); body != NULL; body = body->GetNext())
 	{
-		if (((BodyData*)body->GetUserData())->name == name)
+		if (((BodyData*)body->GetUserData())->id == id)
 		{
 			return body;
 		}
@@ -215,20 +216,20 @@ void PhysicWorld::CreateHeroArrow(float xHero, float yHero, float xMouse, float 
 
 	Sprite *sprite = new Sprite();
 	Texture *texture = new Texture();
-	texture->loadFromFile("resources\\textures\\arrow.png");
+	texture->loadFromFile("resources\\textures\\"+to_string(OBJ_ID_ARROW)+".png");
 	sprite->setTexture(*texture);
 	sprite->setOrigin(ARROW_SIZE_W / 2, ARROW_SIZE_H / 2);
 	
 	bodyData = new ArrowData();
 
-	bodyData->name = ARROW_NAME;
+	bodyData->id = OBJ_ID_ARROW;
 	bodyData->sprite = sprite;
 	bodyData->isAlive = true;
 
 	polygonShape.SetAsBox((ARROW_SIZE_W / 2.0)*P_T_M, (ARROW_SIZE_H / 2.0)*P_T_M);
 	bodyDef.type= b2BodyType::b2_dynamicBody;
 
-	b2Body *hero = Getb2BodyByName(OBJ_ID_HERO);
+	b2Body *hero = Getb2BodyById(OBJ_ID_HERO);
 
 	float maxKoefValue = sqrtf(powf(xHero,2) + powf(yHero,2));
 	float currentKoefValue = sqrtf(powf(yHero - yMouse, 2) + powf(xMouse - xHero, 2))/maxKoefValue;
@@ -270,13 +271,13 @@ void PhysicWorld::CreateEnemyEgg(float xHero, float yHero, float xEnemy, float y
 
 	Sprite *sprite = new Sprite();
 	Texture *texture = new Texture();
-	texture->loadFromFile("resources\\textures\\egg.png");
+	texture->loadFromFile("resources\\textures\\"+to_string(OBJ_ID_EGG)+".png");
 	sprite->setTexture(*texture);
-	sprite->setOrigin(EGG_SIZE_W / 2, EGG_SIZE_H / 2);
+	sprite->setOrigin(TILE_SIZE / 2, TILE_SIZE / 2);
 
 	bodyData = new EggData();
 
-	bodyData->name = EGG_NAME;
+	bodyData->id = OBJ_ID_EGG;
 	bodyData->sprite = sprite;
 	bodyData->isAlive = true;
 	((EggData*)bodyData)->coolDown = 1000;

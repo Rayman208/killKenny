@@ -31,7 +31,7 @@ int Game::ShowWorld(int idWorld)
 	ContactListener contactListener;
 	b2world->SetContactListener(&contactListener);
 
-	b2Body* hero = phWorld.Getb2BodyByName(OBJ_ID_HERO);
+	b2Body* hero = phWorld.Getb2BodyById(OBJ_ID_HERO);
 
 	VideoMode mode = VideoMode::getDesktopMode();
 	float wScale = ((float)mode.width) / SCREEN_WIDTH;
@@ -66,6 +66,11 @@ int Game::ShowWorld(int idWorld)
 	rs.setOutlineThickness(3.0f);
 	rs.setOutlineColor(Color::Red);
 
+	CircleShape cs;
+	cs.setFillColor(Color::Transparent);
+	cs.setOutlineThickness(3.0f);
+	cs.setOutlineColor(Color::Red);
+
 	while (m_window->isOpen() == true)
 	{
 		if (GoToNextLevel == true)
@@ -82,6 +87,7 @@ int Game::ShowWorld(int idWorld)
 			if (evt.type == Event::Closed ||
 				evt.type == Event::KeyPressed && evt.key.code == Keyboard::Key::Escape)
 			{
+				m_currentState = States::exit;
 				m_window->close();
 			}
 			
@@ -147,7 +153,7 @@ int Game::ShowWorld(int idWorld)
 
 		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
 		{
-			if (((BodyData*)body->GetUserData())->name == EGG_NAME)
+			if (((BodyData*)body->GetUserData())->id == OBJ_ID_EGG)
 			{
 				((EggData*)body->GetUserData())->coolDown--;
 
@@ -160,7 +166,7 @@ int Game::ShowWorld(int idWorld)
 
 		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
 		{
-			if (((BodyData*)body->GetUserData())->name == ENEMY_NAME)
+			if (((BodyData*)body->GetUserData())->id == OBJ_ID_ENEMY)
 			{
 				b2Vec2 velocity = body->GetLinearVelocity();
 				
@@ -198,9 +204,8 @@ int Game::ShowWorld(int idWorld)
 				sprite->setRotation(-body->GetAngle()*180.0 / 3.14);
 				m_window->draw(*sprite);
 			}
-		//	if (((BodyData*)body->GetUserData())->name == ENEMY_NAME)
+			if (((BodyData*)body->GetUserData())->id != OBJ_ID_ENEMY)
 			{
-
 				int w = (body->GetFixtureList()->GetAABB(0).GetExtents().x * 2)*M_T_P;
 				int h = (body->GetFixtureList()->GetAABB(0).GetExtents().y * 2)*M_T_P;
 
@@ -210,24 +215,18 @@ int Game::ShowWorld(int idWorld)
 
 				m_window->draw(rs);
 			}
-			/*if (((BodyData*)body->GetUserData())->name == ENEMY_NAME)
+			else
 			{
-				CircleShape cs;
-				cs.setFillColor(Color::Transparent);
-				cs.setOutlineThickness(3.0f);
-				cs.setOutlineColor(Color::Red);
-
-				b2Fixture* f = body->GetFixtureList()->GetNext();
-
-				float r = (f->GetAABB(0).GetExtents().x * 2)*M_T_P;
+				int r = (body->GetFixtureList()->GetAABB(0).GetExtents().x)*M_T_P;
 
 				cs.setRadius(r);
-				cs.setOrigin(r / 2, r / 2);
+				cs.setOrigin(r, r);
 				cs.setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
 
 				m_window->draw(cs);
-			}*/
 
+			}
+			
 
 			/*	if (((BodyData*)body->GetUserData())->name == HERO_NAME)
 			{
@@ -283,12 +282,12 @@ void Game::ShowMainMenu()
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && findIndex!=-1)
 		{
-			if (rects->at(findIndex)->name == START_GAME)
+			if (rects->at(findIndex)->id == BTN_ID_START_GAME)
 			{
 				m_currentState = States::showLevelMenu;
 				return;
 			}
-			else if (rects->at(findIndex)->name == EXIT_GAME)
+			else if (rects->at(findIndex)->id == BTN_ID_EXIT_GAME)
 			{
 				m_currentState = States::exit;
 				return;
@@ -349,12 +348,12 @@ void Game::ShowFinal()
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && findIndex != -1)
 		{
-			if (rects->at(findIndex)->name == TO_MAIN_MENU)
+			if (rects->at(findIndex)->id == BTN_ID_GOTO_MAIN_MENU)
 			{
 				m_currentState = States::showMainMenu;
 				return;
 			}
-			else if (rects->at(findIndex)->name == EXIT_GAME)
+			else if (rects->at(findIndex)->id == BTN_ID_EXIT_GAME)
 			{
 				m_currentState = States::exit;
 				return;
@@ -402,27 +401,27 @@ int Game::ShowLevelMenu()
 		int findIndex = GetActiveRectIndex(rects, Mouse::getPosition());
 		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && findIndex != -1)
 		{
-			if (rects->at(findIndex)->name == TO_MAIN_MENU)
+			if (rects->at(findIndex)->id == BTN_ID_GOTO_MAIN_MENU)
 			{
 				m_currentState = States::showMainMenu;
 				return 0;
 			}
-			else if (rects->at(findIndex)->name == LEVEL1)
+			else if (rects->at(findIndex)->id == BTN_ID_GOTO_LEVEL1)
 			{
 				m_currentState = States::showWorld;
 				return 1;
 			}
-			else if (rects->at(findIndex)->name == LEVEL2)
+			else if (rects->at(findIndex)->id == BTN_ID_GOTO_LEVEL2)
 			{
 				m_currentState = States::showWorld;
 				return 2;
 			}
-			else if (rects->at(findIndex)->name == LEVEL3)
+			else if (rects->at(findIndex)->id == BTN_ID_GOTO_LEVEL3)
 			{
 				m_currentState = States::showWorld;
 				return 3;
 			}
-			else if (rects->at(findIndex)->name == LEVEL4)
+			else if (rects->at(findIndex)->id == BTN_ID_GOTO_LEVEL4)
 			{
 				m_currentState = States::showWorld;
 				return 4;

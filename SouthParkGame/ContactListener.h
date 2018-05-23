@@ -20,58 +20,62 @@ public:
 		b2Fixture *fixtureA = contact->GetFixtureA();
 		b2Fixture *fixtureB = contact->GetFixtureB();
 
-		string nameA = ((BodyData*)fixtureA->GetBody()->GetUserData())->name;
+		int idA = ((BodyData*)fixtureA->GetBody()->GetUserData())->id;
 
-		string nameB = ((BodyData*)fixtureB->GetBody()->GetUserData())->name;
+		int idB = ((BodyData*)fixtureB->GetBody()->GetUserData())->id;
 
-		cout << "nameA: " << nameA << endl;
-		cout << "nameB: " << nameB << endl;
+		cout << "idA: " << idA << endl;
+		cout << "idB: " << idB << endl;
 
-		if (nameA == OBJ_ID_HERO && nameB == ARROW_NAME)
+		if (idA == OBJ_ID_HERO && idB == OBJ_ID_ARROW)
 		{
 			((BodyData*)fixtureB->GetBody()->GetUserData())->isAlive = false;
 			((HeroData*)fixtureA->GetBody()->GetUserData())->countArrows++;
 		}
-		if (nameB == OBJ_ID_HERO && nameA == ARROW_NAME)
+		if (idB == OBJ_ID_HERO && idA == OBJ_ID_ARROW)
 		{
 			((BodyData*)fixtureA->GetBody()->GetUserData())->isAlive = false;
 			((HeroData*)fixtureB->GetBody()->GetUserData())->countArrows++;
 		}
 
-		if (nameB == ENEMY_NAME && (nameA == L_REVERCE_NAME ||
-			nameA == R_REVERCE_NAME) )
+		if (idB == OBJ_ID_ENEMY && fixtureB->IsSensor()==false && (idA == OBJ_ID_L_REVERCE || idA==OBJ_ID_R_REVERCE))
 		{
 			((EnemyData*)fixtureB->GetBody()->GetUserData())->direction *= -1;
 		}
 
-		if (nameB == ARROW_NAME && nameA == ENEMY_NAME && fixtureA->IsSensor() == false)
+		if (idA == OBJ_ID_ENEMY && fixtureA->IsSensor() == false && (idB == OBJ_ID_L_REVERCE || idB == OBJ_ID_R_REVERCE))
+		{
+			((EnemyData*)fixtureA->GetBody()->GetUserData())->direction *= -1;
+		}
+
+		if (idB == OBJ_ID_ARROW && idA == OBJ_ID_ENEMY && fixtureA->IsSensor() == false)
 		{
 			((BodyData*)fixtureA->GetBody()->GetUserData())->isAlive = false;
 		}
 
-		if (nameA == ENEMY_NAME && fixtureA->IsSensor() == true && nameB == OBJ_ID_HERO)
+		if (idA == OBJ_ID_ENEMY && fixtureA->IsSensor() == true && idB == OBJ_ID_HERO)
 		{
 			ShootingEnemy = fixtureA->GetBody();
 		}
 
-		if (nameB == ENEMY_NAME && fixtureB->IsSensor() == true && nameA == OBJ_ID_HERO)
+		if (idB == OBJ_ID_ENEMY && fixtureB->IsSensor() == true && idA == OBJ_ID_HERO)
 		{
 			ShootingEnemy = fixtureB->GetBody();
 		}
 
 
-		if (nameA == OBJ_ID_HERO && nameB == KEY_NAME)
+		if (idA == OBJ_ID_HERO && idB == OBJ_ID_KEY)
 		{
 			((BodyData*)fixtureB->GetBody()->GetUserData())->isAlive = false;
 			KeyIsTaken = true;
 		}
-		if (nameB == OBJ_ID_HERO && nameA == KEY_NAME)
+		if (idB == OBJ_ID_HERO && idA == OBJ_ID_KEY)
 		{
 			((BodyData*)fixtureA->GetBody()->GetUserData())->isAlive = false;
 			KeyIsTaken = true;
 		}
 		
-		if (nameA == OBJ_ID_HERO && nameB == PORTAL_NAME && KeyIsTaken==true)
+		if (idA == OBJ_ID_HERO && idB == OBJ_ID_PORTAL && KeyIsTaken==true)
 		{
 			GoToNextLevel = true;
 		}

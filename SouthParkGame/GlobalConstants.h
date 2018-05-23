@@ -16,27 +16,29 @@
 #define PROP_DYNAMIC "dynamic"
 #define PROP_STATIC "static"
 
-#define OBJ_ID_UP_BORDER "up_border"
-#define OBJ_ID_DOWN_BORDER "down_border"
-#define OBJ_ID_RIGHT_BORDER "right_border"
-#define OBJ_ID_LEFT_BORDER "left_border"
+#define OBJ_ID_UP_BORDER 101
+#define OBJ_ID_DOWN_BORDER 102
+#define OBJ_ID_RIGHT_BORDER 103
+#define OBJ_ID_LEFT_BORDER 104
+
+#define OBJ_ID_HERO 105
+#define OBJ_ID_ENEMY 106
+#define OBJ_ID_ARROW 107
+#define OBJ_ID_EGG 108
+#define OBJ_ID_KEY 109
+#define OBJ_ID_PORTAL 110
+#define OBJ_ID_L_REVERCE 111
+#define OBJ_ID_R_REVERCE 112
+#define OBJ_ID_PLATFORM 113
 
 
-#define OBJ_ID_HERO "hero"
-#define ENEMY_NAME "enemy"
-#define ARROW_NAME "arrow"
-#define EGG_NAME "egg"
-#define KEY_NAME "key"
-#define PORTAL_NAME "portal"
-#define L_REVERCE_NAME "l_reverce"
-#define R_REVERCE_NAME "r_reverce"
+#define BTN_ID_START_GAME 201
+#define BTN_ID_EXIT_GAME 202
+#define BTN_ID_GOTO_MAIN_MENU 203
 
-#define START_GAME "start_game"
-#define EXIT_GAME "exit_game"
-#define TO_MAIN_MENU "to_main_menu"
+#define BTN_ID_GOTO_LEVEL1 204
+#define BTN_ID_GOTO_LEVEL2 205
+#define BTN_ID_GOTO_LEVEL3 206
+#define BTN_ID_GOTO_LEVEL4 207
 
-#define LEVEL1 "level1"
-#define LEVEL2 "level2"
-#define LEVEL3 "level3"
-#define LEVEL4 "level4"
-#define COUNT_LEVELS 2
+#define COUNT_LEVELS 1

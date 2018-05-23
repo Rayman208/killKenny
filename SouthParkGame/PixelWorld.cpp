@@ -35,7 +35,7 @@ void PixelWorld::LoadFromFile(char * fileName)
 
 	for (xml_node object : objects)
 	{
-		string name = object.attribute("name").value();
+		int id = atoi(object.attribute("name").value());
 		int x = atoi(object.attribute("x").value());
 		int y = atoi(object.attribute("y").value());
 		int width = atoi(object.attribute("width").value());
@@ -50,7 +50,7 @@ void PixelWorld::LoadFromFile(char * fileName)
 		tempRect->setScale(wScale, hScale);
 
 		RectangleData *data = new RectangleData();
-		data->name = name;
+		data->id = id;
 		data->rectangle = tempRect;
 
 		m_rectangles->push_back(data);

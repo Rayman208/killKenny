@@ -9,7 +9,7 @@
 </data>
  </layer>
  <objectgroup name="Слой объектов 1">
-  <object id="1" name="start_game" x="324" y="55" width="414" height="156"/>
-  <object id="3" name="exit_game" x="883" y="54.8571" width="414" height="156"/>
+  <object id="1" name="201" x="324" y="55" width="414" height="156"/>
+  <object id="3" name="202" x="883" y="54.8571" width="414" height="156"/>
  </objectgroup>
 </map>

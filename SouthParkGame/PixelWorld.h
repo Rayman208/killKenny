@@ -5,7 +5,7 @@
 
 struct RectangleData
 {
-	string name;
+	int id;
 	RectangleShape *rectangle;
 };
 
