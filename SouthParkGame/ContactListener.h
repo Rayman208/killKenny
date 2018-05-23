@@ -27,12 +27,12 @@ public:
 		cout << "nameA: " << nameA << endl;
 		cout << "nameB: " << nameB << endl;
 
-		if (nameA == HERO_NAME && nameB == ARROW_NAME)
+		if (nameA == OBJ_ID_HERO && nameB == ARROW_NAME)
 		{
 			((BodyData*)fixtureB->GetBody()->GetUserData())->isAlive = false;
 			((HeroData*)fixtureA->GetBody()->GetUserData())->countArrows++;
 		}
-		if (nameB == HERO_NAME && nameA == ARROW_NAME)
+		if (nameB == OBJ_ID_HERO && nameA == ARROW_NAME)
 		{
 			((BodyData*)fixtureA->GetBody()->GetUserData())->isAlive = false;
 			((HeroData*)fixtureB->GetBody()->GetUserData())->countArrows++;
@@ -49,29 +49,29 @@ public:
 			((BodyData*)fixtureA->GetBody()->GetUserData())->isAlive = false;
 		}
 
-		if (nameA == ENEMY_NAME && fixtureA->IsSensor() == true && nameB == HERO_NAME)
+		if (nameA == ENEMY_NAME && fixtureA->IsSensor() == true && nameB == OBJ_ID_HERO)
 		{
 			ShootingEnemy = fixtureA->GetBody();
 		}
 
-		if (nameB == ENEMY_NAME && fixtureB->IsSensor() == true && nameA == HERO_NAME)
+		if (nameB == ENEMY_NAME && fixtureB->IsSensor() == true && nameA == OBJ_ID_HERO)
 		{
 			ShootingEnemy = fixtureB->GetBody();
 		}
 
 
-		if (nameA == HERO_NAME && nameB == KEY_NAME)
+		if (nameA == OBJ_ID_HERO && nameB == KEY_NAME)
 		{
 			((BodyData*)fixtureB->GetBody()->GetUserData())->isAlive = false;
 			KeyIsTaken = true;
 		}
-		if (nameB == HERO_NAME && nameA == KEY_NAME)
+		if (nameB == OBJ_ID_HERO && nameA == KEY_NAME)
 		{
 			((BodyData*)fixtureA->GetBody()->GetUserData())->isAlive = false;
 			KeyIsTaken = true;
 		}
 		
-		if (nameA == HERO_NAME && nameB == PORTAL_NAME && KeyIsTaken==true)
+		if (nameA == OBJ_ID_HERO && nameB == PORTAL_NAME && KeyIsTaken==true)
 		{
 			GoToNextLevel = true;
 		}

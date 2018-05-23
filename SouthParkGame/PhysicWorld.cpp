@@ -49,7 +49,7 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		}
 		BodyData *bodyData;
 
-		if (name == HERO_NAME)
+		if (name == OBJ_ID_HERO)
 		{
 		    bodyData = new HeroData();
 			((HeroData*)bodyData)->countArrows = 10;
@@ -90,7 +90,7 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		fixtureDef.restitution = 0.0;
 		fixtureDef.shape = &polygonShape;
 	
-		if (name == HERO_NAME) { bodyDef.fixedRotation = true; }
+		if (name == OBJ_ID_HERO) { bodyDef.fixedRotation = true; }
 		if (name == L_REVERCE_NAME)
 		{
 			fixtureDef.isSensor = true; 
@@ -102,11 +102,11 @@ void PhysicWorld::LoadFromFile(char* fileName)
 			bodyDef.position.x = bodyDef.position.x + bw * (ENEMY_REVIEW + 1);
 		}
 
-		if (type == DYNAMIC_OBJECT)
+		if (type == PROP_DYNAMIC)
 		{
 			bodyDef.type = b2BodyType::b2_dynamicBody;
 		}
-		else if (type == STATIC_OBJECT)
+		else if (type == PROP_STATIC)
 		{
 			bodyDef.type = b2BodyType::b2_staticBody;
 		}
@@ -145,22 +145,22 @@ void PhysicWorld::LoadFromFile(char* fileName)
 		case 1://верхн€€ граница
 			bodyDef.position = b2Vec2((m_widthInpx / 2.0)*P_T_M, 0);
 			polygonShape.SetAsBox((m_widthInpx / 2.0)*P_T_M, 2 * P_T_M);
-			bodyData->name = UP_BORDER;
+			bodyData->name = OBJ_ID_UP_BORDER;
 			break;
 		case 2://нижн€€ граница
 			bodyDef.position = b2Vec2((m_widthInpx / 2.0)*P_T_M, m_heightInpx*P_T_M);
 			polygonShape.SetAsBox((m_widthInpx / 2.0)*P_T_M, 2 * P_T_M);
-			bodyData->name = DOWN_BORDER;
+			bodyData->name = OBJ_ID_DOWN_BORDER;
 			break;
 		case 3://лева€ граница
 			bodyDef.position = b2Vec2(0, (m_heightInpx/2.0)*P_T_M);
 			polygonShape.SetAsBox(2*P_T_M, (m_heightInpx / 2.0) * P_T_M);
-			bodyData->name = LEFT_BORDER;
+			bodyData->name = OBJ_ID_LEFT_BORDER;
 			break;
 		case 4://права€ граница
 			bodyDef.position = b2Vec2(m_widthInpx*P_T_M, (m_heightInpx / 2.0)*P_T_M);
 			polygonShape.SetAsBox(2 * P_T_M, (m_heightInpx / 2.0) * P_T_M);
-			bodyData->name = RIGHT_BORDER;
+			bodyData->name = OBJ_ID_RIGHT_BORDER;
 			break;
 		}
 		bodyData->isAlive = true;
@@ -228,7 +228,7 @@ void PhysicWorld::CreateHeroArrow(float xHero, float yHero, float xMouse, float 
 	polygonShape.SetAsBox((ARROW_SIZE_W / 2.0)*P_T_M, (ARROW_SIZE_H / 2.0)*P_T_M);
 	bodyDef.type= b2BodyType::b2_dynamicBody;
 
-	b2Body *hero = Getb2BodyByName(HERO_NAME);
+	b2Body *hero = Getb2BodyByName(OBJ_ID_HERO);
 
 	float maxKoefValue = sqrtf(powf(xHero,2) + powf(yHero,2));
 	float currentKoefValue = sqrtf(powf(yHero - yMouse, 2) + powf(xMouse - xHero, 2))/maxKoefValue;

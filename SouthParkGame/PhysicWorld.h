@@ -38,6 +38,7 @@ class EnemyData :public BodyData
 public:
 	int direction;
 	float speed;
+	int review;
 };
 
 

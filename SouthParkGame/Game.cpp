@@ -31,7 +31,7 @@ int Game::ShowWorld(int idWorld)
 	ContactListener contactListener;
 	b2world->SetContactListener(&contactListener);
 
-	b2Body* hero = phWorld.Getb2BodyByName(HERO_NAME);
+	b2Body* hero = phWorld.Getb2BodyByName(OBJ_ID_HERO);
 
 	VideoMode mode = VideoMode::getDesktopMode();
 	float wScale = ((float)mode.width) / SCREEN_WIDTH;
