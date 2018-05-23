@@ -16,7 +16,7 @@ b2Body* ShootingEnemy = NULL;
 bool KeyIsTaken = false;
 bool GoToNextLevel = false;
 
-int Game::ShowWorld(int idWorld)
+int Game::ShowLevel(int idLevel)
 {
 	ShootingEnemy = NULL;
 	KeyIsTaken = false;
@@ -24,7 +24,7 @@ int Game::ShowWorld(int idWorld)
 
 	LevelItem phWorld;
 
-	string worldName = "resources\\levels\\level"+to_string(idWorld) + ".tmx";
+	string worldName = "resources\\levels\\level"+to_string(idLevel) + ".tmx";
 	phWorld.LoadFromFile((char*)worldName.c_str());
 
 	b2World* b2world = phWorld.Getb2World();
@@ -75,7 +75,7 @@ int Game::ShowWorld(int idWorld)
 	{
 		if (GoToNextLevel == true)
 		{
-			return idWorld + 1;
+			return idLevel + 1;
 		}
 
 		long frameTime = clk.restart().asMicroseconds();
@@ -314,7 +314,7 @@ void Game::ShowMainMenu()
 	}
 }
 
-void Game::ShowFinal()
+void Game::ShowFinalMenu()
 {
 	VideoMode mode = VideoMode::getDesktopMode();
 	float wScale = ((float)mode.width) / SCREEN_WIDTH;
@@ -408,22 +408,22 @@ int Game::ShowLevelMenu()
 			}
 			else if (rects->at(findIndex)->id == BTN_ID_GOTO_LEVEL1)
 			{
-				m_currentState = States::showWorld;
+				m_currentState = States::showLevel;
 				return 1;
 			}
 			else if (rects->at(findIndex)->id == BTN_ID_GOTO_LEVEL2)
 			{
-				m_currentState = States::showWorld;
+				m_currentState = States::showLevel;
 				return 2;
 			}
 			else if (rects->at(findIndex)->id == BTN_ID_GOTO_LEVEL3)
 			{
-				m_currentState = States::showWorld;
+				m_currentState = States::showLevel;
 				return 3;
 			}
 			else if (rects->at(findIndex)->id == BTN_ID_GOTO_LEVEL4)
 			{
-				m_currentState = States::showWorld;
+				m_currentState = States::showLevel;
 				return 4;
 			}
 		}
@@ -463,7 +463,7 @@ Game::~Game()
 
 void Game::PlayGame()
 {
-	int idWorld=0;
+	int idLevel=0;
 	while (m_currentState!=States::exit)
 	{
 		switch (m_currentState)
@@ -475,19 +475,19 @@ void Game::PlayGame()
 			ShowMainMenu();
 			break;
 		case States::showLevelMenu:
-			idWorld = ShowLevelMenu();
+			idLevel = ShowLevelMenu();
 			break;
-		case States::showWorld:
-			idWorld = ShowWorld(idWorld);
-			if (idWorld > COUNT_LEVELS)
+		case States::showLevel:
+			idLevel = ShowLevel(idLevel);
+			if (idLevel > COUNT_LEVELS)
 			{
-				m_currentState = States::showFinal;
+				m_currentState = States::showFinalMenu;
 			}
 			break;
 		case States::showShop:
 			break;
-		case States::showFinal:
-			ShowFinal();
+		case States::showFinalMenu:
+			ShowFinalMenu();
 			break;
 		}
 	}

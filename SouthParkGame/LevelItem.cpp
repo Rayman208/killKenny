@@ -74,17 +74,18 @@ void LevelItem::LoadFromFile(char* fileName)
 		b2PolygonShape polygonShape;
 		b2FixtureDef fixtureDef;
 
-		int w2 = width / 2 - 3; //-3px it's a magic!
-		int h2 = height / 2 - 3;
+		int halfWidth = width / 2 - 3; //-3px it's a magic!
+		int halfHeight = height / 2 - 3;
 
-		float xp = (x + w2)*P_T_M;
-		float yp = (y + h2)*P_T_M;
+		float xCenterMeters = (x + halfWidth)*P_T_M;
+		float yCenterMeters = (y + halfHeight)*P_T_M;
 
-		bodyDef.position = b2Vec2(xp,yp);
+		bodyDef.position = b2Vec2(xCenterMeters,yCenterMeters);
 
-		float bw = w2*P_T_M;
-		float bh = h2*P_T_M;
-		polygonShape.SetAsBox(bw,bh);
+		float halfWidthMeters = halfWidth*P_T_M;
+		float halfHeightMeters = halfHeight*P_T_M;
+		
+		polygonShape.SetAsBox(halfWidthMeters,halfHeightMeters);
 		
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.4f;
@@ -92,15 +93,9 @@ void LevelItem::LoadFromFile(char* fileName)
 		fixtureDef.shape = &polygonShape;
 	
 		if (id == OBJ_ID_HERO) { bodyDef.fixedRotation = true; }
-		if (id == OBJ_ID_L_REVERCE)
+		if (id == OBJ_ID_L_REVERCE || id == OBJ_ID_R_REVERCE)
 		{
 			fixtureDef.isSensor = true; 
-			//bodyDef.position.x = bodyDef.position.x - bw * ((EnemyData*)bodyData)->review;
-		}
-		if (id == OBJ_ID_R_REVERCE)
-		{
-			fixtureDef.isSensor = true;
-			//bodyDef.position.x = bodyDef.position.x + bw * ((EnemyData*)bodyData)->review;
 		}
 
 		if (type == PROP_DYNAMIC)
@@ -118,7 +113,7 @@ void LevelItem::LoadFromFile(char* fileName)
 		if (id == OBJ_ID_ENEMY)
 		{
 			b2CircleShape circleShape;
-			circleShape.m_radius = bw*((EnemyData*)bodyData)->review;
+			circleShape.m_radius = halfWidthMeters*((EnemyData*)bodyData)->review;
 			b2FixtureDef fixtureDefCircle;
 			fixtureDefCircle.shape = &circleShape;
 			fixtureDefCircle.isSensor = true;
