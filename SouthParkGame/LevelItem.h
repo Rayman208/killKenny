@@ -7,7 +7,7 @@ class BodyData
 {
 public:
 	int id;
-	Sprite *sprite;
+	Sprite *backgroundSprite;
 	bool isAlive;
 };
 

@@ -22,16 +22,16 @@ int Game::ShowLevel(int idLevel)
 	KeyIsTaken = false;
 	GoToNextLevel = false;
 
-	LevelItem phWorld;
+	LevelItem levelItem;
 
-	string worldName = "resources\\levels\\level"+to_string(idLevel) + ".tmx";
-	phWorld.LoadFromFile((char*)worldName.c_str());
+	string levelName = "resources\\levels\\level"+to_string(idLevel) + ".tmx";
+	levelItem.LoadFromFile((char*)levelName.c_str());
 
-	b2World* b2world = phWorld.Getb2World();
+	b2World* b2world = levelItem.Getb2World();
 	ContactListener contactListener;
 	b2world->SetContactListener(&contactListener);
 
-	b2Body* hero = phWorld.Getb2BodyById(OBJ_ID_HERO);
+	b2Body* hero = levelItem.Getb2BodyById(OBJ_ID_HERO);
 
 	VideoMode mode = VideoMode::getDesktopMode();
 	float wScale = ((float)mode.width) / SCREEN_WIDTH;
@@ -40,8 +40,8 @@ int Game::ShowLevel(int idLevel)
 	float viewW = SCREEN_WIDTH*wScale;
 	float viewH = SCREEN_HEIGHT*hScale;
 
-	float xHero = viewW / 2;
-	float yHero = viewH / 2;
+	float xViewCenter = viewW / 2;
+	float yViewCenter = viewH / 2;
 
 	float b2Step = 1.0f / 60.0f;
 
@@ -81,27 +81,14 @@ int Game::ShowLevel(int idLevel)
 		long frameTime = clk.restart().asMicroseconds();
 		double fps = 1000000.0 / frameTime;
 
-		Event evt;
-		while (m_window->pollEvent(evt) == true)
+		if (Keyboard::isKeyPressed(Keyboard::Key::Right) == true)
 		{
-			if (evt.type == Event::Closed ||
-				evt.type == Event::KeyPressed && evt.key.code == Keyboard::Key::Escape)
-			{
-				m_currentState = States::exit;
-				m_window->close();
-			}
-			
-		}
-		if (Keyboard::isKeyPressed(Keyboard::Key::Right) == true && view.getCenter().x<phWorld.GetWidthInpx())
-		{
-			//view.move(1, 0);
 			b2Vec2 velocity = hero->GetLinearVelocity();
 			velocity.x = 0.15f;
 			hero->SetLinearVelocity(velocity);
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Key::Left) == true && view.getCenter().x>0)
+		if (Keyboard::isKeyPressed(Keyboard::Key::Left) == true)
 		{
-			//view.move(-1, 0);
 			b2Vec2 velocity = hero->GetLinearVelocity();
 			velocity.x = -0.15f;
 			hero->SetLinearVelocity(velocity);
@@ -110,29 +97,23 @@ int Game::ShowLevel(int idLevel)
 		{
 			pressJump = false;
 		}
-		if (pressJump==false && Keyboard::isKeyPressed(Keyboard::Key::Up) == true && view.getCenter().y>0)
+		if (pressJump==false && Keyboard::isKeyPressed(Keyboard::Key::Up) == true)
 		{
 			b2Vec2 velocity = hero->GetLinearVelocity();
 			velocity.y = -0.5f;
 			hero->SetLinearVelocity(velocity);
 			pressJump = true;
-			//view.move(0, -1);
-			
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Key::Down) == true && view.getCenter().y<phWorld.GetHeightInpx())
-		{
-			//view.move(0, 1);
-		}
-
-
+		
 		if (Mouse::isButtonPressed(Mouse::Button::Left) == false)
 		{
 			pressFire = false;
 		}
+
 		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && pressFire == false && ((HeroData*)hero->GetUserData())->countArrows>0)
 		{
 			if(firstShoot==false)
-			phWorld.CreateHeroArrow(xHero,yHero,
+			levelItem.CreateHeroArrow(xViewCenter,yViewCenter,
 					Mouse::getPosition().x, Mouse::getPosition().y);
 			
 			pressFire = true;
@@ -142,7 +123,7 @@ int Game::ShowLevel(int idLevel)
 
 		if (ShootingEnemy != NULL)
 		{
-			phWorld.CreateEnemyEgg(
+			levelItem.CreateEnemyEgg(
 				hero->GetPosition().x,
 				hero->GetPosition().y, 
 				ShootingEnemy->GetPosition().x,
@@ -151,8 +132,20 @@ int Game::ShowLevel(int idLevel)
 			ShootingEnemy = NULL;
 		}
 
+		b2world->Step(b2Step, 8, 3);
+
+
 		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
 		{
+			if (((BodyData*)body->GetUserData())->id == OBJ_ID_ENEMY)
+			{
+				b2Vec2 velocity = body->GetLinearVelocity();
+				
+				velocity.x = ((EnemyData*)body->GetUserData())->direction * ((EnemyData*)body->GetUserData())->speed * frameTime / 1000.0;
+
+				body->SetLinearVelocity(velocity);
+			}
+
 			if (((BodyData*)body->GetUserData())->id == OBJ_ID_EGG)
 			{
 				((EggData*)body->GetUserData())->coolDown--;
@@ -166,20 +159,6 @@ int Game::ShowLevel(int idLevel)
 
 		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
 		{
-			if (((BodyData*)body->GetUserData())->id == OBJ_ID_ENEMY)
-			{
-				b2Vec2 velocity = body->GetLinearVelocity();
-				
-				velocity.x = ((EnemyData*)body->GetUserData())->direction * ((EnemyData*)body->GetUserData())->speed * frameTime / 1000.0;
-
-				body->SetLinearVelocity(velocity);
-			}
-		}
-
-		b2world->Step(b2Step, 8, 3);
-
-		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
-		{
 			if (((BodyData*)body->GetUserData())->isAlive == false)
 			{
 				b2world->DestroyBody(body);
@@ -189,20 +168,19 @@ int Game::ShowLevel(int idLevel)
 
 		view.setCenter(hero->GetPosition().x*M_T_P, hero->GetPosition().y*M_T_P);
 
-		//	window.setTitle(to_string(view.getCenter().x) +":"+to_string(view.getCenter().y));
-
+		
 		m_window->setView(view);
 		m_window->clear(Color::Yellow);
 
 		for (b2Body *body = b2world->GetBodyList(); body != NULL; body = body->GetNext())
 		{
-			Sprite *sprite = ((BodyData*)body->GetUserData())->sprite;
+			Sprite *backgroundSprite = ((BodyData*)body->GetUserData())->backgroundSprite;
 
-			if (sprite != NULL)
+			if (backgroundSprite != NULL)
 			{
-				sprite->setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
-				sprite->setRotation(-body->GetAngle()*180.0 / 3.14);
-				m_window->draw(*sprite);
+				backgroundSprite->setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
+				backgroundSprite->setRotation(-body->GetAngle()*180.0 / 3.14);
+				m_window->draw(*backgroundSprite);
 			}
 			if (((BodyData*)body->GetUserData())->id != OBJ_ID_ENEMY)
 			{
@@ -224,24 +202,9 @@ int Game::ShowLevel(int idLevel)
 				cs.setPosition(body->GetPosition().x*M_T_P, body->GetPosition().y*M_T_P);
 
 				m_window->draw(cs);
-
 			}
 			
-
-			/*	if (((BodyData*)body->GetUserData())->name == HERO_NAME)
-			{
-			int lifes = ((HeroData*)body->GetUserData())->lifes;
-			window.setTitle(to_string(lifes));
-			}*/
 		}
-
-		/*rs.setSize(Vector2f(2,2));
-		rs.setOrigin(1, 1);
-		rs.setPosition(view.getCenter().x, view.getCenter().y);
-
-		m_window->draw(rs);
-*/
-
 
 		float heroX = hero->GetPosition().x;
 		float heroY = hero->GetPosition().y;
@@ -249,11 +212,7 @@ int Game::ShowLevel(int idLevel)
 		string outString = "fps = " + to_string(fps) + "\n";
 		outString += "heroX = " + to_string(heroX) + "\n";
 		outString += "heroY = " + to_string(heroY) + "\n";
-		outString += "mX = " + to_string(Mouse::getPosition().x*P_T_M) + "\n";
-		outString += "mY = " + to_string(Mouse::getPosition().y*P_T_M) + "\n";
-		outString += "viewX = " + to_string(view.getCenter().x) + "\n";
-		outString += "viewY = " + to_string(view.getCenter().y) + "\n";
-
+	
 		gameInfo.setPosition(heroX*M_T_P + 10, heroY*M_T_P + 10);
 		gameInfo.setString(outString);
 		m_window->draw(gameInfo);
@@ -265,19 +224,14 @@ int Game::ShowLevel(int idLevel)
 
 void Game::ShowMainMenu()
 {
-	MenuItem pxWorld;
-	pxWorld.LoadFromFile("resources\\menus\\mainmenu.tmx");
+	MenuItem menuItem;
+	menuItem.LoadFromFile("resources\\menus\\mainmenu.tmx");
 
-	Sprite *backgroud = pxWorld.GetBackground();
-	vector<RectangleData*> *rects = pxWorld.GetPixelWorld();
+	Sprite *backgroud = menuItem.GetBackgroundSprite();
+	vector<RectangleData*> *rects = menuItem.GetRectangleItems();
 
 	while (m_window->isOpen() == true)
 	{
-		Event evt;
-		while (m_window->pollEvent(evt) == true)
-		{
-		}
-
 		int findIndex = GetActiveRectIndex(rects, Mouse::getPosition());
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && findIndex!=-1)
@@ -293,7 +247,6 @@ void Game::ShowMainMenu()
 				return;
 			}
 		}
-
 
 		m_window->clear();
 		m_window->draw(*backgroud);
@@ -326,11 +279,11 @@ void Game::ShowFinalMenu()
 	View view(Vector2f(viewW/2,viewH/2), Vector2f(viewW, viewH));
 	m_window->setView(view);
 
-	MenuItem pxWorld;
-	pxWorld.LoadFromFile("resources\\menus\\final.tmx");
+	MenuItem menuItem;
+	menuItem.LoadFromFile("resources\\menus\\final.tmx");
 
-	Sprite *backgroud = pxWorld.GetBackground();
-	vector<RectangleData*> *rects = pxWorld.GetPixelWorld();
+	Sprite *backgroud = menuItem.GetBackgroundSprite();
+	vector<RectangleData*> *rects = menuItem.GetRectangleItems();
 
 	RectangleShape rs;
 	rs.setPosition(Vector2f(10, 10));
@@ -339,11 +292,6 @@ void Game::ShowFinalMenu()
 
 	while (m_window->isOpen() == true)
 	{
-		Event evt;
-		while (m_window->pollEvent(evt) == true)
-		{
-		}
-
 		int findIndex = GetActiveRectIndex(rects, Mouse::getPosition());
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && findIndex != -1)
@@ -385,19 +333,14 @@ void Game::ShowFinalMenu()
 
 int Game::ShowLevelMenu()
 {
-	MenuItem pxWorld;
-	pxWorld.LoadFromFile("resources\\menus\\levelmenu.tmx");
+	MenuItem menuItem;
+	menuItem.LoadFromFile("resources\\menus\\levelmenu.tmx");
 
-	Sprite *backgroud = pxWorld.GetBackground();
-	vector<RectangleData*> *rects = pxWorld.GetPixelWorld();
+	Sprite *backgroud = menuItem.GetBackgroundSprite();
+	vector<RectangleData*> *rects = menuItem.GetRectangleItems();
 
 	while (m_window->isOpen() == true)
 	{
-		Event evt;
-		while (m_window->pollEvent(evt) == true)
-		{
-		}
-
 		int findIndex = GetActiveRectIndex(rects, Mouse::getPosition());
 		if (Mouse::isButtonPressed(Mouse::Button::Left) == true && findIndex != -1)
 		{

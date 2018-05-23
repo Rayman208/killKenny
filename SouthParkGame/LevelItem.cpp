@@ -36,16 +36,16 @@ void LevelItem::LoadFromFile(char* fileName)
 		int height = atoi(object.attribute("height").value());
 		string type = object.attribute("type").value();
 
-		Sprite *sprite = NULL;
+		Sprite *backgroundSprite = NULL;
 		if (id != OBJ_ID_L_REVERCE && id != OBJ_ID_R_REVERCE)
 		{
-			sprite = new Sprite();
+			backgroundSprite = new Sprite();
 			Texture *texture = new Texture();
 			texture->loadFromFile("resources\\textures\\" + to_string(id) + ".png");
 			texture->setRepeated(true);
-			sprite->setTexture(*texture);
-			sprite->setTextureRect(IntRect(0, 0, width, height));
-			sprite->setOrigin(width / 2, height / 2);
+			backgroundSprite->setTexture(*texture);
+			backgroundSprite->setTextureRect(IntRect(0, 0, width, height));
+			backgroundSprite->setOrigin(width / 2, height / 2);
 		}
 		BodyData *bodyData;
 
@@ -66,7 +66,7 @@ void LevelItem::LoadFromFile(char* fileName)
 		{
 			bodyData = new BodyData();
 		}
-		bodyData->sprite = sprite;
+		bodyData->backgroundSprite = backgroundSprite;
 		bodyData->id = id;
 		bodyData->isAlive = true;
 		
@@ -132,7 +132,7 @@ void LevelItem::LoadFromFile(char* fileName)
 		BodyData *bodyData;
 
 		bodyData = new BodyData();
-		bodyData->sprite = new Sprite();
+		bodyData->backgroundSprite = new Sprite();
 
 		bodyDef.type = b2BodyType::b2_staticBody;
 
@@ -209,16 +209,16 @@ void LevelItem::CreateHeroArrow(float xHero, float yHero, float xMouse, float yM
 
 	BodyData *bodyData;
 
-	Sprite *sprite = new Sprite();
+	Sprite *backgroundSprite = new Sprite();
 	Texture *texture = new Texture();
 	texture->loadFromFile("resources\\textures\\"+to_string(OBJ_ID_ARROW)+".png");
-	sprite->setTexture(*texture);
-	sprite->setOrigin(ARROW_SIZE_W / 2, ARROW_SIZE_H / 2);
+	backgroundSprite->setTexture(*texture);
+	backgroundSprite->setOrigin(ARROW_SIZE_W / 2, ARROW_SIZE_H / 2);
 	
 	bodyData = new ArrowData();
 
 	bodyData->id = OBJ_ID_ARROW;
-	bodyData->sprite = sprite;
+	bodyData->backgroundSprite = backgroundSprite;
 	bodyData->isAlive = true;
 
 	polygonShape.SetAsBox((ARROW_SIZE_W / 2.0)*P_T_M, (ARROW_SIZE_H / 2.0)*P_T_M);
@@ -264,16 +264,16 @@ void LevelItem::CreateEnemyEgg(float xHero, float yHero, float xEnemy, float yEn
 
 	BodyData *bodyData;
 
-	Sprite *sprite = new Sprite();
+	Sprite *backgroundSprite = new Sprite();
 	Texture *texture = new Texture();
 	texture->loadFromFile("resources\\textures\\"+to_string(OBJ_ID_EGG)+".png");
-	sprite->setTexture(*texture);
-	sprite->setOrigin(TILE_SIZE / 2, TILE_SIZE / 2);
+	backgroundSprite->setTexture(*texture);
+	backgroundSprite->setOrigin(TILE_SIZE / 2, TILE_SIZE / 2);
 
 	bodyData = new EggData();
 
 	bodyData->id = OBJ_ID_EGG;
-	bodyData->sprite = sprite;
+	bodyData->backgroundSprite = backgroundSprite;
 	bodyData->isAlive = true;
 	((EggData*)bodyData)->coolDown = 1000;
 

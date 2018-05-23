@@ -23,11 +23,11 @@ void MenuItem::LoadFromFile(char * fileName)
 	document.load_file(fileName);
 
 	string textureName = document.child("map").child("tileset").child("image").attribute("source").value();
-	sprite = new Sprite();
+	backgroundSprite = new Sprite();
 	Texture *texture = new Texture();
 	texture->loadFromFile("resources\\textures\\" + textureName);
-	sprite->setTexture(*texture);
-	sprite->setScale(wScale, hScale);
+	backgroundSprite->setTexture(*texture);
+	backgroundSprite->setScale(wScale, hScale);
 
 	m_rectangles->clear();
 
@@ -57,12 +57,12 @@ void MenuItem::LoadFromFile(char * fileName)
 	}
 }
 
-vector<RectangleData*>* MenuItem::GetPixelWorld()
+vector<RectangleData*>* MenuItem::GetRectangleItems()
 {
 	return m_rectangles;
 }
 
-Sprite * MenuItem::GetBackground()
+Sprite * MenuItem::GetBackgroundSprite()
 {
-	return sprite;
+	return backgroundSprite;
 }
