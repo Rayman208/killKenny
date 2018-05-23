@@ -27,10 +27,10 @@
     <ClCompile Include="Game.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicWorld.cpp">
+    <ClCompile Include="LevelItem.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="PixelWorld.cpp">
+    <ClCompile Include="MenuItem.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,13 +47,13 @@
     <ClInclude Include="Game.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicWorld.h">
-      <Filter>Заголовочные файлы\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="PixelWorld.h">
-      <Filter>Заголовочные файлы\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="ContactListener.h">
+      <Filter>Заголовочные файлы\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelItem.h">
+      <Filter>Заголовочные файлы\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h">
       <Filter>Заголовочные файлы\Engine</Filter>
     </ClInclude>
   </ItemGroup>

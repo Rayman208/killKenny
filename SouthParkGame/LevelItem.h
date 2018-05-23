@@ -42,7 +42,7 @@ public:
 };
 
 
-class PhysicWorld
+class LevelItem
 {
 private:
 	b2World *m_world;
@@ -50,8 +50,8 @@ private:
 	int m_widthInpx;
 	int m_heightInpx;
 public:
-	PhysicWorld();
-	~PhysicWorld();
+	LevelItem();
+	~LevelItem();
 
 	void LoadFromFile(char* fileName);
 	

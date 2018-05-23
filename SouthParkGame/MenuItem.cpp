@@ -1,19 +1,19 @@
-#include "PixelWorld.h"
+#include "MenuItem.h"
 
 
 
-PixelWorld::PixelWorld()
+MenuItem::MenuItem()
 {
 	m_rectangles = new vector<RectangleData*>();
 }
 
 
-PixelWorld::~PixelWorld()
+MenuItem::~MenuItem()
 {
 	delete m_rectangles;
 }
 
-void PixelWorld::LoadFromFile(char * fileName)
+void MenuItem::LoadFromFile(char * fileName)
 {
 	VideoMode mode = VideoMode::getDesktopMode();
 	float wScale = ((float)mode.width) / SCREEN_WIDTH;
@@ -57,12 +57,12 @@ void PixelWorld::LoadFromFile(char * fileName)
 	}
 }
 
-vector<RectangleData*>* PixelWorld::GetPixelWorld()
+vector<RectangleData*>* MenuItem::GetPixelWorld()
 {
 	return m_rectangles;
 }
 
-Sprite * PixelWorld::GetBackground()
+Sprite * MenuItem::GetBackground()
 {
 	return sprite;
 }

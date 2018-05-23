@@ -9,14 +9,14 @@ struct RectangleData
 	RectangleShape *rectangle;
 };
 
-class PixelWorld
+class MenuItem
 {
 private:
 	vector<RectangleData*> *m_rectangles;
 	Sprite *sprite;
 public:
-	PixelWorld();
-	~PixelWorld();
+	MenuItem();
+	~MenuItem();
 
 	void LoadFromFile(char* fileName);
 

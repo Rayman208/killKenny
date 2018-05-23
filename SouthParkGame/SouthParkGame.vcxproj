@@ -119,9 +119,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="PhysicWorld.cpp" />
+    <ClCompile Include="LevelItem.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PixelWorld.cpp" />
+    <ClCompile Include="MenuItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -131,8 +131,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlobalConstants.h" />
     <ClInclude Include="GlobalLibraries.h" />
-    <ClInclude Include="PhysicWorld.h" />
-    <ClInclude Include="PixelWorld.h" />
+    <ClInclude Include="LevelItem.h" />
+    <ClInclude Include="MenuItem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,18 +1,18 @@
-#include "PhysicWorld.h"
+#include "LevelItem.h"
 
 
-PhysicWorld::PhysicWorld()
+LevelItem::LevelItem()
 {
 	m_world = new b2World(b2Vec2(0, 0.1f));
 }
 
 
-PhysicWorld::~PhysicWorld()
+LevelItem::~LevelItem()
 {
 	delete m_world;
 }
 
-void PhysicWorld::LoadFromFile(char* fileName)
+void LevelItem::LoadFromFile(char* fileName)
 {
 	xml_document document;
 	document.load_file(fileName);
@@ -178,7 +178,7 @@ void PhysicWorld::LoadFromFile(char* fileName)
 	}
 }
 
-b2Body* PhysicWorld::Getb2BodyById(int id)
+b2Body* LevelItem::Getb2BodyById(int id)
 {
 	for (b2Body *body = m_world->GetBodyList(); body != NULL; body = body->GetNext())
 	{
@@ -191,22 +191,22 @@ b2Body* PhysicWorld::Getb2BodyById(int id)
 }
 
 
-int PhysicWorld::GetWidthInpx()
+int LevelItem::GetWidthInpx()
 {
 	return m_widthInpx;
 }
 
-int PhysicWorld::GetHeightInpx()
+int LevelItem::GetHeightInpx()
 {
 	return m_heightInpx;
 }
 
-b2World * PhysicWorld::Getb2World()
+b2World * LevelItem::Getb2World()
 {
 	return m_world;
 }
 
-void PhysicWorld::CreateHeroArrow(float xHero, float yHero, float xMouse, float yMouse)
+void LevelItem::CreateHeroArrow(float xHero, float yHero, float xMouse, float yMouse)
 {
 	b2BodyDef bodyDef;
 	b2PolygonShape polygonShape;
@@ -261,7 +261,7 @@ void PhysicWorld::CreateHeroArrow(float xHero, float yHero, float xMouse, float 
 	body->SetLinearVelocity(b2Vec2(0.9f*cos(alpha)*currentKoefValue, -0.9f*sin(alpha)*currentKoefValue));
 }
 
-void PhysicWorld::CreateEnemyEgg(float xHero, float yHero, float xEnemy, float yEnemy)
+void LevelItem::CreateEnemyEgg(float xHero, float yHero, float xEnemy, float yEnemy)
 {
 	b2BodyDef bodyDef;
 	b2PolygonShape polygonShape;

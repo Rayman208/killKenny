@@ -22,7 +22,7 @@ int Game::ShowWorld(int idWorld)
 	KeyIsTaken = false;
 	GoToNextLevel = false;
 
-	PhysicWorld phWorld;
+	LevelItem phWorld;
 
 	string worldName = "resources\\levels\\level"+to_string(idWorld) + ".tmx";
 	phWorld.LoadFromFile((char*)worldName.c_str());
@@ -265,7 +265,7 @@ int Game::ShowWorld(int idWorld)
 
 void Game::ShowMainMenu()
 {
-	PixelWorld pxWorld;
+	MenuItem pxWorld;
 	pxWorld.LoadFromFile("resources\\menus\\mainmenu.tmx");
 
 	Sprite *backgroud = pxWorld.GetBackground();
@@ -326,7 +326,7 @@ void Game::ShowFinal()
 	View view(Vector2f(viewW/2,viewH/2), Vector2f(viewW, viewH));
 	m_window->setView(view);
 
-	PixelWorld pxWorld;
+	MenuItem pxWorld;
 	pxWorld.LoadFromFile("resources\\menus\\final.tmx");
 
 	Sprite *backgroud = pxWorld.GetBackground();
@@ -385,7 +385,7 @@ void Game::ShowFinal()
 
 int Game::ShowLevelMenu()
 {
-	PixelWorld pxWorld;
+	MenuItem pxWorld;
 	pxWorld.LoadFromFile("resources\\menus\\levelmenu.tmx");
 
 	Sprite *backgroud = pxWorld.GetBackground();
